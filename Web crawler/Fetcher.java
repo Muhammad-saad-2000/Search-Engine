@@ -72,7 +72,7 @@ public class Fetcher {
 	 * @param path the path to the seed file
 	 * @return array of strings that contains the urls
 	 */
-	static String[] fetchSeedFile(String path) {
+	static String[] getUrlsFromSeeds(String path) {
 		String result[] = null;
 		try {
 			File seedFile = new File(path);
@@ -96,6 +96,22 @@ public class Fetcher {
 			ex.printStackTrace();
 		}
 		return result;
+	}
+
+	/**
+	 * This function is used to read the urls of the seed file
+	 * 
+	 * @param url
+	 * @param path the path to the seeds file
+	 */
+	static void addUrlToSeeds(String url, String path) {
+		try {
+			PrintWriter out = new PrintWriter(path);
+			out.println(url);
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {
