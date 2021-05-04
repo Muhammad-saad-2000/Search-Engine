@@ -1,6 +1,6 @@
 import java.net.*;
 import java.io.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class Fetcher {
 	/**
@@ -62,7 +62,7 @@ public class Fetcher {
 	 * @param url the web page url
 	 * @return the robots.txt content
 	 */
-	static String fetchRobotsFile(String url) throws IOException {
+	static String fetchRobotsFile(String url) {
 		return fetchToString(url + "/robots.txt");
 	}
 
