@@ -113,8 +113,4 @@ public class Fetcher {
 			ex.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) {
-
-	}
 }
