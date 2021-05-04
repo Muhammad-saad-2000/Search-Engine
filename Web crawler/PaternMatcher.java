@@ -1,6 +1,5 @@
 import java.util.regex.*;
 
-//if there is no paragraph don't fetch
 public class PaternMatcher {
 	/**
 	 * This function is used to matche a url pattern in a string
