@@ -5,14 +5,12 @@ import java.util.*;
 public class Fetcher {
 	/**
 	 * This function is used to fetch the content of the web page and put it into a
-	 * file
+	 * html file
 	 * 
 	 * @param url      the web page url
 	 * @param filename the name of the file without extension
 	 */
-	static void fetchToFile(String url, String filename) {
-
-		// Get the content from the URL
+	static void fetchToFile(String url, String path) {
 		String content = null;
 		try {
 			URLConnection connection = new URL(url).openConnection();
@@ -23,10 +21,10 @@ public class Fetcher {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		// Write the content to a file
 		try {
-			PrintWriter out = new PrintWriter(filename + ".html");
-			out.println(content);
+			url = url.replaceAll("[^a-zA-Z0-9]", "");
+			PrintWriter out = new PrintWriter(path + "/" + url + ".html");
+			out.write(content);
 			out.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -67,31 +65,20 @@ public class Fetcher {
 	}
 
 	/**
-	 * This function is used to read the urls of the seed file
+	 * This function is used to read the first url from a file
 	 * 
-	 * @param path the path to the seed file
-	 * @return array of strings that contains the urls
+	 * @param filePath the path to the file
+	 * @return a string that contains the url
 	 */
-	static String[] getUrlsFromSeeds(String path) {
-		String result[] = null;
+	static String popUrlFromFile(String filePath) {
+		String result = "";
 		try {
-			File seedFile = new File(path);
-			// get the number of lines
-			Scanner scanner = new Scanner(seedFile);
-			int numOfUrls = 0;
-			while (scanner.hasNextLine()) {
-				scanner.nextLine();
-				numOfUrls += 1;
+			Scanner scanner = new Scanner(new File(filePath));
+			if (scanner.hasNextLine()) {
+				result = scanner.nextLine();
 			}
 			scanner.close();
-			// get the data
-			result = new String[numOfUrls];
-			scanner = new Scanner(seedFile);
-			for (int i = 0; i < numOfUrls; i++) {
-				String data = scanner.nextLine();
-				result[i] = data;
-			}
-			scanner.close();
+			removeFirstLine(filePath);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -99,18 +86,85 @@ public class Fetcher {
 	}
 
 	/**
-	 * This function is used to read the urls of the seed file
+	 * This function is used to write a url to a file
 	 * 
-	 * @param url
-	 * @param path the path to the seeds file
+	 * @param url      a string representing the url
+	 * @param filePath the path to the file the url will be put into
 	 */
-	static void addUrlToSeeds(String url, String path) {
+	static void pushUrlToFile(String url, String filePath) {
 		try {
-			PrintWriter out = new PrintWriter(path);
+			PrintWriter out = new PrintWriter(new FileOutputStream(new File(filePath), true));
 			out.println(url);
 			out.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	/**
+	 * This function is used to get the number of urls form file
+	 * 
+	 * @param filePath the path to the file from which the url will be counted
+	 */
+	static int getUrlsNumber(String filePath) {
+		int urlsNumber = 0;
+		try {
+			File file = new File(filePath);
+			Scanner scanner = new Scanner(file);
+			while (scanner.hasNextLine()) {
+				scanner.nextLine();
+				urlsNumber += 1;
+			}
+			scanner.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return urlsNumber;
+	}
+
+	/**
+	 * This function is used to delete the first line
+	 * 
+	 * @param filePath the path to the file from which the first lin will be removed
+	 */
+	public static void removeFirstLine(String fileName) throws IOException {
+		RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+		// Initial write position
+		long writePosition = raf.getFilePointer();
+		raf.readLine();
+		// Shift the next lines upwards.
+		long readPosition = raf.getFilePointer();
+
+		byte[] buff = new byte[1024];
+		int n;
+		while (-1 != (n = raf.read(buff))) {
+			raf.seek(writePosition);
+			raf.write(buff, 0, n);
+			readPosition += n;
+			writePosition += n;
+			raf.seek(readPosition);
+		}
+		raf.setLength(writePosition);
+		raf.close();
+	}
+
+	/**
+	 * This function is used to copy data from a file to a string
+	 * 
+	 * @param filePath the path to the file from which the data will be read
+	 */
+	static String readFileToString(String filePath) {
+		String result = "";
+		try {
+			File file = new File(filePath);
+			Scanner scanner = new Scanner(file);
+			while (scanner.hasNextLine()) {
+				result += scanner.nextLine();
+			}
+			scanner.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return result;
 	}
 }
