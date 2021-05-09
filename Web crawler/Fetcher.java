@@ -19,7 +19,7 @@ public class Fetcher {
 			content = scanner.next();
 			scanner.close();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex);
 		}
 		try {
 			url = url.replaceAll("[^a-zA-Z0-9]", "");
@@ -27,7 +27,7 @@ public class Fetcher {
 			out.write(content);
 			out.close();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex);
 		}
 	}
 
@@ -48,7 +48,7 @@ public class Fetcher {
 			content = scanner.next();
 			scanner.close();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex);
 		}
 		return content;
 	}
@@ -62,90 +62,6 @@ public class Fetcher {
 	 */
 	static String fetchRobotsFile(String url) {
 		return fetchToString(url + "/robots.txt");
-	}
-
-	/**
-	 * This function is used to read the first url from a file
-	 * 
-	 * @param filePath the path to the file
-	 * @return a string that contains the url
-	 */
-	static String popUrlFromFile(String filePath) {
-		String result = "";
-		try {
-			Scanner scanner = new Scanner(new File(filePath));
-			if (scanner.hasNextLine()) {
-				result = scanner.nextLine();
-			}
-			scanner.close();
-			removeFirstLine(filePath);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return result;
-	}
-
-	/**
-	 * This function is used to write a url to a file
-	 * 
-	 * @param url      a string representing the url
-	 * @param filePath the path to the file the url will be put into
-	 */
-	static void pushUrlToFile(String url, String filePath) {
-		try {
-			PrintWriter out = new PrintWriter(new FileOutputStream(new File(filePath), true));
-			out.println(url);
-			out.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
-	/**
-	 * This function is used to get the number of urls form file
-	 * 
-	 * @param filePath the path to the file from which the url will be counted
-	 */
-	static int getUrlsNumber(String filePath) {
-		int urlsNumber = 0;
-		try {
-			File file = new File(filePath);
-			Scanner scanner = new Scanner(file);
-			while (scanner.hasNextLine()) {
-				scanner.nextLine();
-				urlsNumber += 1;
-			}
-			scanner.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return urlsNumber;
-	}
-
-	/**
-	 * This function is used to delete the first line
-	 * 
-	 * @param filePath the path to the file from which the first lin will be removed
-	 */
-	public static void removeFirstLine(String fileName) throws IOException {
-		RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
-		// Initial write position
-		long writePosition = raf.getFilePointer();
-		raf.readLine();
-		// Shift the next lines upwards.
-		long readPosition = raf.getFilePointer();
-
-		byte[] buff = new byte[1024];
-		int n;
-		while (-1 != (n = raf.read(buff))) {
-			raf.seek(writePosition);
-			raf.write(buff, 0, n);
-			readPosition += n;
-			writePosition += n;
-			raf.seek(readPosition);
-		}
-		raf.setLength(writePosition);
-		raf.close();
 	}
 
 	/**
@@ -163,8 +79,26 @@ public class Fetcher {
 			}
 			scanner.close();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex);
 		}
 		return result;
+	}
+
+	/**
+	 * This function is used to check if given web page is changed or not and update the old content
+	 * 
+	 * @param url The web page url
+	 */
+	static public boolean isChanged(String url) {
+		fetchToFile(url, "./temp");
+		url = url.replaceAll("[^a-zA-Z0-9]", "");
+		String current = readFileToString("./temp/" + url + ".html");
+		current = current.substring(40, 50);
+		String last = readFileToString("./retrievedPages/" + url + ".html");
+		last = last.substring(40, 50);
+		File myObj = new File("./temp/" + url + ".html");
+		myObj.delete();
+		fetchToFile(url,"./retrievedPages");
+		return (current.hashCode() != last.hashCode());
 	}
 }

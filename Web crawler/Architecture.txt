@@ -1,0 +1,33 @@
+notes:
+	all ranks have at least one thread that dadecated to them
+	crawling: get all the urls from file and download the pages and get the urls from them and write them to the seed
+	
+process:
+	main thread:
+		the crawl cycle is done for the number of urls that are in the seeds before starting
+		1-crawl the seed file{
+			1-pop url
+			2-get its content as string
+			3-extract the urls from it
+			6-push the crawled url to rank1 file
+			4-write the content to a file
+			5-push the urls to the seeds one by one after some process(check that is an html file not photo or script for example, has no duplicate in the seeds(increase the priority of the existing one), priority setting)
+		}
+	the main rank threads:
+		1-read status file
+		2-if it should crawl then go on{
+			1-pop url
+			2-get its content as string
+			3-compare it with the last time it was indexed to see if changed or not{
+				if changed: leave it as it is (push it back to the same rank)
+				if no: move it to higher rank (push it to newer rank)
+			}
+			4-extract the urls from it
+			5-rewrite the content to a file
+			6-push the urls to the seeds one by one after some process(check that is an html file not photo or script for example, has no duplicate in the seeds(increase the priority of the existing one), priority setting)
+		}
+		3-sleep for the remaining time
+
+addtions:
+	i must have a key for files (make files as obj an synchronize the read and write)
+	priority with .com / .net

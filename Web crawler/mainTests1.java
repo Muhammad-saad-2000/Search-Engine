@@ -1,35 +1,30 @@
 public class MainTests1 {
 	public static void main(String[] args) {
-		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution","./retrievedPages/");
-		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution","./temp/");
+		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
+				"./retrievedPages/");
+		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
+				"./temp/");
 	}
 }
 
 class MainTests2 {
 	public static void main(String[] args) {
-		String url;
-		url = Frequancy.popUrlFromSeeds();
-		while (!url.equals("")) {
-			Frequancy.pushUrlToRank(url, 1);
-			String content = Fetcher.fetchToString(url);
-			String[] result = PaternMatcher.ExtractUrlsFromString(content);
-			System.out.println("The url:" + url + " | num of inner links: " + result.length);
-			System.out.println(result[0]);
-			for (int i = 0; i < result.length; i++) {
-				Frequancy.pushUrlToSeeds(result[i]);
-			}
-			url = Frequancy.popUrlFromSeeds();
-		}
+		String url = "https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution";
+		System.out.println(Fetcher.isChanged(url));
 	}
 }
 
 class MainTests3 {
 	public static void main(String[] args) {
-		String url = "https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution";
-		url = url.replaceAll("[^a-zA-Z0-9]", "");
-		String last = Fetcher.readFileToString("./retrievedPages/" + url + ".html");
-		String current = Fetcher.readFileToString("./temp/" + url + ".html");
-		System.out.println(current.hashCode());
-		System.out.println(last.hashCode());
+		DataBaseConnection seedsConnection = new DataBaseConnection();
+		seedsConnection.connect();
+		// seedsConnection.pushUrlToSeeds("https://stackoverflow.com", 15);
+
+		// seedsConnection.popUrlFromSeeds();
+		// System.out.println("Url: " + seedsConnection.url + "\npriority: " +
+		// seedsConnection.priority);
+
+		// seedsConnection.updatePriortyInSeeds("https://stackoverflow.com", 50);
+		seedsConnection.disconnect();
 	}
 }
