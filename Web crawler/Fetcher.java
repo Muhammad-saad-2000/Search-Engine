@@ -1,5 +1,6 @@
 import java.net.*;
 import java.io.*;
+import java.sql.ResultSet;
 import java.util.*;
 
 public class Fetcher {
@@ -101,4 +102,23 @@ public class Fetcher {
 		fetchToFile(url,"./retrievedPages");
 		return (current.hashCode() != last.hashCode());
 	}
+
+	//TODO this is not req in doc, so mehhhhhhh
+	static public boolean isDuplicate(String content)
+	{
+		return false;
+	}
+
+
+	static public boolean isCrawled(String url){
+		//cleaning the url
+		url = url.replaceAll("[^a-zA-Z0-9]", "");
+		url += ".html";
+		// declaring a file
+		System.out.println(System.getProperty("user.dir"));
+		File testfile = new File("./retrievedPages/", url);
+
+		return testfile.exists();
+	}
+
 }

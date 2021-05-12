@@ -1,5 +1,5 @@
 notes:
-	all ranks have at least one thread that dadecated to them
+	all ranks have at least one thread that dedicated to them
 	crawling: get all the urls from file and download the pages and get the urls from them and write them to the seed
 	
 process:
@@ -28,6 +28,10 @@ process:
 		}
 		3-sleep for the remaining time
 
-addtions:
+additions:
 	i must have a key for files (make files as obj an synchronize the read and write)
 	priority with .com / .net
+
+		// TODO
+    	// function hat checks if url exists in scheduler and if so, increase its priority
+        // I didn't implement this because it needs a wrapper class of some other classes, will be done later

@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Web crawler/.idea
+/Web crawler/out/production/Web crawler/.idea
+/Web crawler/out/production/Web crawler/.vscode
+/Web crawler/out/production/Web crawler
+/Web crawler/Web crawler.iml

@@ -1,6 +1,7 @@
 import java.sql.*;
 
 public class DataBaseConnection {
+
 	Connection mysqlConnection;
 	Statement mysqlStatement;
 	public String url = null;
@@ -47,13 +48,13 @@ public class DataBaseConnection {
 		}
 	}
 
-	public void updatePriortyInSeeds(String url, int priority) {
+	//Gh: this makes more sense to be increasing/decreasing rather than setting a whole new value
+	public void increasePriortyInSeeds(String url, int inc_priority) {
 		try {
 			mysqlStatement
-					.executeUpdate("UPDATE Seeds SET PriorityValue = " + priority + " WHERE UrlName = '" + url + "'");
+					.executeUpdate("UPDATE Seeds SET PriorityValue = PriorityValue + " + inc_priority + " WHERE UrlName = '" + url + "'");
 		} catch (Exception ex) {
 			System.out.println(ex);
-
 		}
 	}
 
@@ -80,10 +81,12 @@ public class DataBaseConnection {
 		}
 	}
 
-	public void updatePriortyInRank(int rank, String url, int priority) {
+	//this won't be used :(
+	//Gh: this makes more sense to be increasing/decreasing rather than setting a whole new value
+	public void increasePriortyInRank(int rank, String url, int inc_priority) {
 		try {
 			mysqlStatement.executeUpdate(
-					"UPDATE Rank" + rank + " SET PriorityValue = " + priority + " WHERE UrlName = '" + url + "'");
+					"UPDATE Rank" + rank + " SET PriorityValue = PriorityValue + " + inc_priority + " WHERE UrlName = '" + url + "'");
 		} catch (Exception ex) {
 			System.out.println(ex);
 
