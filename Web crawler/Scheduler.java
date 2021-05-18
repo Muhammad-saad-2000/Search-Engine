@@ -3,11 +3,7 @@ import java.net.*;
 
 public class Scheduler {
 
-    ////////////////////////////////////////////////////////////
-    // ----  Start OF STATIC MEMBERS
-    ////////////////////////////////////////////////////////////
-
-    private static final int
+    public static final int
             DEFAULT_PRIORITY = 15,
             MAX_PRIORITY = Integer.MAX_VALUE,
             MIN_PRIORITY = Integer.MIN_VALUE,
@@ -22,7 +18,7 @@ public class Scheduler {
     }};
 
     //returns priority based on multiple HEURISTICS
-    private static int getInitialPriority(String url) {
+    public static int getInitialPriority(String url) {
         int ret = DEFAULT_PRIORITY;
         try {
             URI uri = new URI(url);
@@ -39,34 +35,5 @@ public class Scheduler {
 
     }
 
-    ////////////////////////////////////////////////////////////
-    // ----  END OF STATIC MEMBERS
-    ////////////////////////////////////////////////////////////
 
-   /*   below is if we wanted class to be not static
-    //private final DataBaseConnection connection;
-    //private final String Seed;                          // Seed I am interacting with , i.e.: table in database
-    // if ypu have a better name, go ahead
-
-    public Scheduler(DataBaseConnection C,String S){
-        connection = C;
-        Seed = S;
-    }
-
-    public static void pushUrl(String url){
-        boolean duplicate = connection.existsUrl(url,Seed);
-        if(duplicate)
-        {
-            connection.increasePriorty(url,Seed,DUPLICATE_INCREMENT);
-            return;
-        }
-
-        int priority = getInitialPriority(url);
-        connection.insertUrl(url,Seed,priority);
-    }
-
-    public String popUrl(){
-        return connection.getTopUrl(Seed);
-    }
-*/
 }

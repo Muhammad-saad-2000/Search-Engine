@@ -1,3 +1,34 @@
+//testing crawler as a whole
+// I didn't run this :)
+class MainTests0{
+	public static void main(String[] args) throws  Exception {
+
+		DataBaseConnection seedsConnection = new DataBaseConnection();
+		seedsConnection.connect();
+
+		Thread t0 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
+		Thread t1 = new Thread(new Crawler.Crawler_Rank(seedsConnection,1));
+
+		t0.start();
+		t1.start();
+
+		//wait some time
+		final int one_hour = 1000 * 3600;
+		Thread.currentThread().sleep(2*one_hour);
+
+		//interrupt all
+		Thread.currentThread().notifyAll();
+
+		//making sure they are done
+		t0.join();
+		t1.join();
+
+		//disable connection and end
+		seedsConnection.disconnect();
+	}
+}
+
+
 //test fetch to file
 class MainTests1 {
 	public static void main(String[] args) {

@@ -104,10 +104,10 @@ public class Fetcher {
 	}
 
 	//TODO this is not req in doc, so mehhhhhhh
-	static public boolean isDuplicate(String content)
+	/*static public boolean isDuplicate(String content)
 	{
 		return false;
-	}
+	}*/
 
 
 	static public boolean isCrawled(String url){

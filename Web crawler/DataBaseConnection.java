@@ -1,6 +1,9 @@
 import java.sql.*;
+import java.util.*;
 
 public class DataBaseConnection {
+
+	public static final int MAX_RANK = 5;
 
 	Connection mysqlConnection;
 	Statement mysqlStatement;
@@ -25,9 +28,9 @@ public class DataBaseConnection {
 		}
 	}
 
-	public void popUrlFromSeeds() {
+	public String popUrlFromSeeds() {
+		url = null;
 		try {
-			url = null;
 			ResultSet result = mysqlStatement.executeQuery("SELECT MAX(PriorityValue) FROM Seeds");
 			result.next();
 			priority = result.getInt(1);
@@ -35,12 +38,15 @@ public class DataBaseConnection {
 			result.next();
 			url = result.getString(1);
 			mysqlStatement.executeUpdate("DELETE FROM Seeds WHERE UrlName = '" + url + "'");
+
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
+		return url;
 	}
 
-	public void pushUrlToSeeds(String url, int priority) {
+	public void pushUrlToSeeds(String url) {
+		int priority = Scheduler.getInitialPriority(url);
 		try {
 			mysqlStatement.executeUpdate("insert into Seeds values ('" + url + "'," + priority + ")");
 		} catch (Exception ex) {
@@ -49,47 +55,80 @@ public class DataBaseConnection {
 	}
 
 	//Gh: this makes more sense to be increasing/decreasing rather than setting a whole new value
-	public void increasePriortyInSeeds(String url, int inc_priority) {
+	public void increasePriorityInSeeds(String url, int inc_priority) {
 		try {
+			//// these lines are there just to avoid overflow of priority
+			ResultSet res = mysqlStatement.executeQuery(
+					"SELECT Priority FROM Seeds WHERE UrlName = '" + url + "'");
+			res.next();
+			int old_pr = res.getInt(0);
+			int new_Pr = old_pr;
+			if(Scheduler.MAX_PRIORITY - inc_priority >= new_Pr)
+				new_Pr += inc_priority;
+			//////
+
 			mysqlStatement
-					.executeUpdate("UPDATE Seeds SET PriorityValue = PriorityValue + " + inc_priority + " WHERE UrlName = '" + url + "'");
+					.executeUpdate("UPDATE Seeds SET PriorityValue =  " + new_Pr + " WHERE UrlName = '" + url + "'");
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
 	}
 
-	public void popUrlFromRank(int rank) {
+	//Gh: Changed to return ALL urls as an array of Strings
+	public String[] getUrlsFromRank(int rank) {
 		try {
-			url = null;
-			ResultSet result = mysqlStatement.executeQuery("SELECT MAX(PriorityValue) FROM Rank" + rank);
-			result.next();
-			priority = result.getInt(1);
-			result = mysqlStatement.executeQuery("SELECT * FROM Rank" + rank + " where priorityValue=" + priority);
-			result.next();
-			url = result.getString(1);
+			ResultSet result = mysqlStatement.executeQuery("SELECT * FROM Rank" + rank);
+
+			ArrayList<String> list= new ArrayList<String>();
+			while (result.next()) {
+				list.add(result.getString(0));
+			}
+
+			String[] ret = new String[list.size()];
+			ret = list.toArray(ret);
+
+			for(int i =0; i<ret.length; i++){
+				System.out.println(ret[i]);
+			}
+
+			return ret;
+		} catch (Exception ex) {
+			System.out.println(ex);
+			return new String[0];
+		}
+	}
+
+	public void pushUrlToRank(int rank, String url) {
+		try {
+			mysqlStatement.executeUpdate("insert into Rank" + rank + " values ('" + url  + "')");
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+	}
+
+	//used to decrease freq. of certain url
+	public void pushUrlToNextRank(int rank,String url){
+		//do nothing if already in last rank
+		if(rank==MAX_RANK)
+			return;
+		try {
 			mysqlStatement.executeUpdate("DELETE FROM Rank" + rank + " WHERE UrlName = '" + url + "'");
+			pushUrlToRank(rank+1,url);
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
 	}
 
-	public void pushUrlToRank(int rank, String url, int priority) {
+	//used to check if some url already in Seeds, checking for duplicates
+	public boolean isInSeeds(String url){
+		boolean ret = false;
 		try {
-			mysqlStatement.executeUpdate("insert into Rank" + rank + " values ('" + url + "'," + priority + ")");
+			ResultSet result = mysqlStatement.executeQuery("SELECT * FROM Seeds WHERE UrlName = '" + url + "'");
+			if(result.next())
+				ret=true;
 		} catch (Exception ex) {
 			System.out.println(ex);
 		}
-	}
-
-	//this won't be used :(
-	//Gh: this makes more sense to be increasing/decreasing rather than setting a whole new value
-	public void increasePriortyInRank(int rank, String url, int inc_priority) {
-		try {
-			mysqlStatement.executeUpdate(
-					"UPDATE Rank" + rank + " SET PriorityValue = PriorityValue + " + inc_priority + " WHERE UrlName = '" + url + "'");
-		} catch (Exception ex) {
-			System.out.println(ex);
-
-		}
+		return ret;
 	}
 }
