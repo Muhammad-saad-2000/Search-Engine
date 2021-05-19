@@ -13,14 +13,29 @@ public class PatternMatcher {
                 Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
         int numOfUrls = 0;
+        String temp;
         while (matcher.find()) {
-            numOfUrls += 1;
+            temp = matcher.group(0);
+            Pattern pattern2 = Pattern.compile(// remove urls that aren't html
+                    "\\bpng\\b|\\bjpg\\b|\\bsvg\\b|\\bjpeg\\b|\\bmp4\\b|\\bmp3\\b|\\bmov\\b|\\bwav\\b|\\bwmv\\b|\\bmkv\\b|\\bflv\\b|\\bavi\\b|\\bwebm\\b|\\bapi\\b|\\bjs\\b|\\bscript\\b",
+                    Pattern.CASE_INSENSITIVE);
+            Matcher matcher2 = pattern2.matcher(temp);
+            if (!matcher2.find()) {
+                numOfUrls += 1;
+            }
         }
         String[] result = new String[numOfUrls];
         matcher = pattern.matcher(str);
-        for (int i = 0; i < numOfUrls; i++) {
-            matcher.find();
+        int i = 0;
+        while (matcher.find()) {
             result[i] = matcher.group(0);
+            Pattern pattern2 = Pattern.compile(// remove urls that aren't html
+                    "\\bpng\\b|\\bjpg\\b|\\bsvg\\b|\\bjpeg\\b|\\bmp4\\b|\\bmp3\\b|\\bmov\\b|\\bwav\\b|\\bwmv\\b|\\bmkv\\b|\\bflv\\b|\\bavi\\b|\\bwebm\\b|\\bapi\\b|\\bjs\\b|\\bscript\\b",
+                    Pattern.CASE_INSENSITIVE);
+            Matcher matcher2 = pattern2.matcher(result[i]);
+            if (!matcher2.find()) {
+                i++;
+            }
         }
         return result;
     }

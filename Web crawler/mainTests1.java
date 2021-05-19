@@ -1,35 +1,34 @@
 //testing crawler as a whole
 // I didn't run this :)
-class MainTests0{
-	public static void main(String[] args) throws  Exception {
+class MainTests0 {
+	public static void main(String[] args) throws Exception {
 
 		DataBaseConnection seedsConnection = new DataBaseConnection();
 		seedsConnection.connect();
 
 		Thread t0 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
-		Thread t1 = new Thread(new Crawler.Crawler_Rank(seedsConnection,1));
+		Thread t1 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
 
 		t0.start();
 		t1.start();
 
-		//wait some time
+		// wait some time
 		final int one_hour = 1000 * 3600;
-		Thread.currentThread().sleep(2*one_hour);
+		Thread.currentThread().sleep(2 * one_hour);
 
-		//interrupt all
+		// interrupt all
 		Thread.currentThread().notifyAll();
 
-		//making sure they are done
+		// making sure they are done
 		t0.join();
 		t1.join();
 
-		//disable connection and end
+		// disable connection and end
 		seedsConnection.disconnect();
 	}
 }
 
-
-//test fetch to file
+// test fetch to file
 class MainTests1 {
 	public static void main(String[] args) {
 		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
@@ -39,7 +38,7 @@ class MainTests1 {
 	}
 }
 
-//test is changed
+// test is changed
 class MainTests2 {
 	public static void main(String[] args) {
 		String url = "https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution";
@@ -47,7 +46,7 @@ class MainTests2 {
 	}
 }
 
-//test database connection
+// test database connection
 class MainTests3 {
 	public static void main(String[] args) {
 		DataBaseConnection seedsConnection = new DataBaseConnection();
@@ -63,23 +62,34 @@ class MainTests3 {
 	}
 }
 
-//test scheduler
-class MainTests4{
-	public static void main(String[] args){
+// test scheduler
+class MainTests4 {
+	public static void main(String[] args) {
 		DataBaseConnection seedsConnection = new DataBaseConnection();
 		seedsConnection.connect();
-
-
 
 		seedsConnection.disconnect();
 	}
 
 }
 
-//test is Crawled
-class MainTests5{
-	public static void main(String[] args){
+// test is Crawled
+class MainTests5 {
+	public static void main(String[] args) {
 		String url = "https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution";
 		System.out.println(Fetcher.isCrawled(url));
+	}
+}
+
+//test retrieved urls
+class MainTests6 {
+	public static void main(String[] args) {
+		String url = "https://en.wikipedia.org/wiki/Sinc_function";
+		String site = Fetcher.fetchToString(url);
+		String[] result = PatternMatcher.ExtractUrlsFromString(site);
+		System.out.println(result.length);
+		for (int i = 0; i < result.length; i++) {
+			System.out.println(result[i]);
+		}
 	}
 }
