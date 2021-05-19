@@ -48,7 +48,6 @@ public class Crawler {
 
     }
 
-
     public static class Crawler_Rank implements Runnable {
         DataBaseConnection conn;
         int rank;
@@ -63,10 +62,13 @@ public class Crawler {
         }
 
         private void doWork() {
-            //get all urls to crawl
-            String[] urls = conn.getUrlsFromRank(rank);
-            for (String curr_url : urls) {
-                //process urls[i]
+            // preferably we wait until it finishes without interrupting
+            while (!Thread.currentThread().isInterrupted()) {
+                String curr_url = conn.popUrlFromRank(rank);
+                //if no more urls, DONE!
+                if(curr_url==null)
+                    break;
+                //else, process it
                 //not changed so we push to next rank
                 if (!Fetcher.isChanged(curr_url)) {
                     conn.pushUrlToNextRank(rank, curr_url);

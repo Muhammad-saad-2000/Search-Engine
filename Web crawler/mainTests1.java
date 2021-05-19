@@ -1,31 +1,71 @@
-//testing crawler as a whole
+
+
+//testing crawler as a whole, Seeds + Rank, multiThreaded
 // I didn't run this :)
+
+//Seeds
 class MainTests0 {
+	static final int one_hour = 1000 * 3600;
 	public static void main(String[] args) throws Exception {
 
 		DataBaseConnection seedsConnection = new DataBaseConnection();
 		seedsConnection.connect();
 
 		Thread t0 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
-		Thread t1 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
+		Thread t1 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
+		Thread t2 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
 
 		t0.start();
 		t1.start();
+		t2.start();
 
-		// wait some time
-		final int one_hour = 1000 * 3600;
+		//wait for some time
 		Thread.currentThread().sleep(2 * one_hour);
 
 		// interrupt all
-		Thread.currentThread().notifyAll();
 
-		// making sure they are done
-		t0.join();
-		t1.join();
+		// not sure this works ?
+		//Thread.currentThread().getThreadGroup().interrupt();
+
+		t0.interrupt();
+		t1.interrupt();
+		t2.interrupt();
 
 		// disable connection and end
 		seedsConnection.disconnect();
 	}
+
+}
+
+//Rank
+class MainTest00{
+	static final int one_hour = 1000 * 3600;
+	public static void main(String[] args) throws Exception{
+
+		DataBaseConnection seedsConnection = new DataBaseConnection();
+		seedsConnection.connect();
+
+		Thread t0 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
+		Thread t1 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
+		Thread t2 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
+
+		//preparing tmp_Rank1
+		seedsConnection.fillTmpRank(1);
+
+		//START
+		t0.start();
+		t1.start();
+		t2.start();
+
+		//wait until they finish
+		t0.join();
+		t1.join();
+		t2.join();
+
+		// disable connection and end
+		seedsConnection.disconnect();
+	}
+
 }
 
 // test fetch to file
