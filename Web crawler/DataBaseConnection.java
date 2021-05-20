@@ -54,7 +54,7 @@ public class DataBaseConnection {
         }
     }
 
-    //used to check if some url already in Seeds, checking for duplicates
+    // used to check if some url already in Seeds, checking for duplicates
     public boolean isInSeeds(String url) {
         boolean ret = false;
         try {
@@ -67,12 +67,13 @@ public class DataBaseConnection {
         return ret;
     }
 
-    //Gh: this makes more sense to be increasing/decreasing rather than setting a whole new value
+    // Gh: this makes more sense to be increasing/decreasing rather than setting a
+    // whole new value
     public void increasePriorityInSeeds(String url, int inc_priority) {
         try {
             //// these lines are there just to avoid overflow of priority
-            ResultSet res = mysqlStatement.executeQuery(
-                    "SELECT PriorityValue FROM Seeds WHERE UrlName = '" + url + "'");
+            ResultSet res = mysqlStatement
+                    .executeQuery("SELECT PriorityValue FROM Seeds WHERE UrlName = '" + url + "'");
             res.next();
             int old_pr = res.getInt(0);
             int new_Pr = old_pr;
@@ -87,23 +88,23 @@ public class DataBaseConnection {
         }
     }
 
-    //Gh: this fills tmp_Rank for crawling purposes
+    // Gh: this fills tmp_Rank for crawling purposes
     public void fillTmpRank(int rank) {
         try {
-            //create if not exists
+            // create if not exists
             mysqlStatement.executeUpdate("CREATE TABLE IF NOT EXISTS tmp_Rank" + rank + " (UrlName varchar(2048))");
-            //Copy table
+            // Copy table
             mysqlStatement.executeUpdate("INSERT INTO tmp_Rank" + rank + " SELECT * FROM Rank" + rank);
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    //Gh: Changed to return ALL urls as an array of Strings
+    // Gh: Changed to return ALL urls as an array of Strings
     public String popUrlFromRank(int rank) {
         try {
             ResultSet result = mysqlStatement.executeQuery("SELECT * FROM tmp_Rank" + rank + " LIMIT 1");
-            //if found return it, else return NULL
+            // if found return it, else return NULL
             if (result.next()) {
                 url = result.getString(0);
                 mysqlStatement.executeUpdate("DELETE FROM Rank" + rank + " WHERE UrlName = '" + url + "'");
@@ -124,9 +125,9 @@ public class DataBaseConnection {
         }
     }
 
-    //used to decrease freq. of certain url
+    // used to decrease freq. of certain url
     public void pushUrlToNextRank(int rank, String url) {
-        //do nothing if already in last rank
+        // do nothing if already in last rank
         if (rank == MAX_RANK)
             return;
         try {

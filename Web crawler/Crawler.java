@@ -14,31 +14,33 @@ public class Crawler {
         }
 
         private void doWork() {
-            //while not interrupted, do work
+            // while not interrupted, do work
             while (!Thread.currentThread().isInterrupted()) {
                 String curr_url = conn.popUrlFromSeeds();
-                if(curr_url==null)
+                if (curr_url == null)
                     break;
-                //chk if already in some rank
+                // chk if already in some rank
                 if (Fetcher.isCrawled(curr_url)) {
                     continue;
                 }
-                //else, fetch its content to file , then crawl it
-                Fetcher.fetchToFile(curr_url,"./retrievedPages/");
+                // else, fetch its content to file , then crawl it
+                Fetcher.fetchToFile(curr_url, "./retrievedPages/");
                 String curr_content = Fetcher.fetchToString(curr_url);
-                String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content);
-                //push found urls into Seed if NOT CRAWLED
+                String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content, curr_url);// Saad:i add the url
+                                                                                                   // so i could get the
+                                                                                                   // robots
+                // push found urls into Seed if NOT CRAWLED
                 for (String inner_url : inner_urls) {
-                    //chk if already in some rank
+                    // chk if already in some rank
                     if (Fetcher.isCrawled(inner_url)) {
                         continue;
                     }
-                    //chk if already in Seeds
+                    // chk if already in Seeds
                     if (conn.isInSeeds(inner_url)) {
-                    conn.increasePriorityInSeeds(inner_url,Scheduler.DUPLICATE_INCREMENT);
-                    continue;
+                        conn.increasePriorityInSeeds(inner_url, Scheduler.DUPLICATE_INCREMENT);
+                        continue;
                     }
-                    //else, push it to Seeds
+                    // else, push it to Seeds
                     conn.pushUrlToSeeds(inner_url);
                 }
 
@@ -65,19 +67,19 @@ public class Crawler {
             // preferably we wait until it finishes without interrupting
             while (!Thread.currentThread().isInterrupted()) {
                 String curr_url = conn.popUrlFromRank(rank);
-                //if no more urls, DONE!
-                if(curr_url==null)
+                // if no more urls, DONE!
+                if (curr_url == null)
                     break;
-                //else, process it
-                //not changed so we push to next rank
+                // else, process it
+                // not changed so we push to next rank
                 if (!Fetcher.isChanged(curr_url)) {
                     conn.pushUrlToNextRank(rank, curr_url);
                     continue;
                 }
-                //else, crawl it
+                // else, crawl it
                 String curr_content = Fetcher.fetchToString(curr_url);
-                String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content);
-                //push found urls into Seed if NOT CRAWLED
+                String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content, curr_url);//Saad:i add the url so i could get the robots
+                // push found urls into Seed if NOT CRAWLED
                 for (String inner_url : inner_urls) {
                     if (Fetcher.isCrawled(inner_url)) {
                         continue;

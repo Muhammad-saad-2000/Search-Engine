@@ -86,7 +86,8 @@ public class Fetcher {
 	}
 
 	/**
-	 * This function is used to check if given web page is changed or not and update the old content
+	 * This function is used to check if given web page is changed or not and update
+	 * the old content
 	 * 
 	 * @param url The web page url
 	 */
@@ -99,19 +100,17 @@ public class Fetcher {
 		last = last.substring(40, 50);
 		File myObj = new File("./temp/" + url + ".html");
 		myObj.delete();
-		fetchToFile(url,"./retrievedPages");
+		fetchToFile(url, "./retrievedPages");
 		return (current.hashCode() != last.hashCode());
 	}
 
-	//TODO this is not req in doc, so mehhhhhhh
-	/*static public boolean isDuplicate(String content)
-	{
-		return false;
-	}*/
+	// TODO this is not req in doc, so mehhhhhhh
+	/*
+	 * static public boolean isDuplicate(String content) { return false; }
+	 */
 
-
-	static public boolean isCrawled(String url){
-		//cleaning the url
+	static public boolean isCrawled(String url) {
+		// cleaning the url
 		url = url.replaceAll("[^a-zA-Z0-9]", "");
 		url += ".html";
 		// declaring a file
