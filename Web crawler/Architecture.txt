@@ -32,6 +32,3 @@ additions:
 	i must have a key for files (make files as obj an synchronize the read and write)
 	priority with .com / .net
 
-		// TODO
-    	// function that checks if url exists in scheduler and if so, increase its priority
-        // I didn't implement this because it needs a wrapper class of some other classes, will be done later
