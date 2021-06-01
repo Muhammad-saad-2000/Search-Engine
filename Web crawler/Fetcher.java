@@ -9,15 +9,15 @@ public class Fetcher {
 	 * html file
 	 * 
 	 * @param url      the web page url
-	 * @param filename the name of the file without extension
+	 * @param path the path to put file in
 	 */
 	static void fetchToFile(String url, String path) {
-		String content = null;
+		String content = url + "\n";
 		try {
 			URLConnection connection = new URL(url).openConnection();
 			Scanner scanner = new Scanner(connection.getInputStream());
 			scanner.useDelimiter("\\Z");
-			content = scanner.next();
+			content += scanner.next();
 			scanner.close();
 		} catch (Exception ex) {
 			System.out.println(ex);
