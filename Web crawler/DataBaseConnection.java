@@ -15,8 +15,9 @@ public class DataBaseConnection {
             Class.forName("com.mysql.jdbc.Driver");
             mysqlConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/searchengine", "root",
                     "ssmk65108");
-            mysqlStatement = mysqlConnection.createStatement();
+            // mysqlStatement = mysqlConnection.createStatement();
         } catch (Exception ex) {
+            System.out.println("AAAAAAAAAAAAA");
             System.out.println(ex);
         }
     }
@@ -31,6 +32,7 @@ public class DataBaseConnection {
     public String popUrlFromSeeds() {
         url = null;
         try {
+            mysqlStatement = mysqlConnection.createStatement();
             ResultSet result = mysqlStatement.executeQuery("SELECT MAX(PriorityValue) FROM Seeds");
             result.next();
             priority = result.getInt(1);
@@ -38,18 +40,21 @@ public class DataBaseConnection {
             result.next();
             url = result.getString(1);
             mysqlStatement.executeUpdate("DELETE FROM Seeds WHERE UrlName = '" + url + "'");
-
         } catch (Exception ex) {
+            System.out.println("exc in popping from seeds");
             System.out.println(ex);
+            System.out.println("");
         }
         return url;
     }
 
     public void pushUrlToSeeds(String url) {
-        int priority = Scheduler.getInitialPriority(url);
+        int priority = 10;
         try {
+            mysqlStatement = mysqlConnection.createStatement();
             mysqlStatement.executeUpdate("insert into Seeds values ('" + url + "'," + priority + ")");
         } catch (Exception ex) {
+            System.out.println("EXC in insertin g to seeeds");
             System.out.println(ex);
         }
     }
@@ -58,6 +63,7 @@ public class DataBaseConnection {
     public boolean isInSeeds(String url) {
         boolean ret = false;
         try {
+            mysqlStatement = mysqlConnection.createStatement();
             ResultSet result = mysqlStatement.executeQuery("SELECT * FROM Seeds WHERE UrlName = '" + url + "'");
             if (result.next())
                 ret = true;

@@ -12,15 +12,15 @@ class MainTests0 {
 		seedsConnection.connect();
 
 		Thread t0 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
-		Thread t1 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
-		Thread t2 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
+		// Thread t1 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
+		// Thread t2 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
 
 		t0.start();
-		t1.start();
-		t2.start();
+		// t1.start();
+		// t2.start();
 
 		// wait for some time
-		Thread.currentThread().sleep(2 * one_hour);
+		Thread.currentThread().sleep(2 * 1000000000);
 
 		// interrupt all
 
@@ -28,8 +28,8 @@ class MainTests0 {
 		// Thread.currentThread().getThreadGroup().interrupt();
 
 		t0.interrupt();
-		t1.interrupt();
-		t2.interrupt();
+		// t1.interrupt();
+		// t2.interrupt();
 
 		// disable connection and end
 		seedsConnection.disconnect();
@@ -175,4 +175,25 @@ class MainTests7 {
 		}
 	}
 
+}
+
+class MainTestsTests {
+	public static void main(String[] args) {
+		DataBaseConnection seedsConnection = new DataBaseConnection();
+		seedsConnection.connect();
+		seedsConnection.pushUrlToSeeds("Good game5");
+		seedsConnection.pushUrlToSeeds("Good game6");
+		System.out.println(seedsConnection.popUrlFromSeeds());
+		seedsConnection.pushUrlToSeeds("Good game7");
+		System.out.println(seedsConnection.popUrlFromSeeds());
+		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
+				"./");
+		seedsConnection.pushUrlToSeeds("Good game8");
+		System.out.println(seedsConnection.popUrlFromSeeds());
+		System.out.println(seedsConnection.isInSeeds("Good game4"));
+		Fetcher.fetchToFile("https://stackoverflow.com", "./");
+		System.out.println(seedsConnection.isInSeeds("Good game1"));
+		System.out.println(seedsConnection.isInSeeds("Good game8"));
+		seedsConnection.disconnect();
+	}
 }

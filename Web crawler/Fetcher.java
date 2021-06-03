@@ -8,7 +8,7 @@ public class Fetcher {
 	 * This function is used to fetch the content of the web page and put it into a
 	 * html file
 	 * 
-	 * @param url      the web page url
+	 * @param url  the web page url
 	 * @param path the path to put file in
 	 */
 	static void fetchToFile(String url, String path) {
@@ -19,10 +19,7 @@ public class Fetcher {
 			scanner.useDelimiter("\\Z");
 			content += scanner.next();
 			scanner.close();
-		} catch (Exception ex) {
-			System.out.println(ex);
-		}
-		try {
+			
 			url = url.replaceAll("[^a-zA-Z0-9]", "");
 			PrintWriter out = new PrintWriter(path + "/" + url + ".html");
 			out.write(content);
