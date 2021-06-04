@@ -3,7 +3,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class indexer {
-    private static final String HTML_FOLDER_PATH = "TEST" ;
+    private static final String HTML_FOLDER_PATH = "../retrievedPages/" ;
     private static final int MAX_THREAD_POOL_SIZE = 4;
 
     public static void main(String[] args){

@@ -23,6 +23,7 @@ public class Scheduler {
         try {
             URI uri = new URI(url);
             String domain = uri.getHost();
+            System.out.println(domain);
             domain = domain.startsWith("www.") ? domain.substring(4) : domain;
 
             ret += INC_DOMAIN.get(domain);

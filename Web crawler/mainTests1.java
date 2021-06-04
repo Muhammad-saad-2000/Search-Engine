@@ -73,7 +73,7 @@ class MainTest00 {
 class MainTests1 {
 	public static void main(String[] args) {
 		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
-				"./retrievedPages/");
+				"../retrievedPages/");
 		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
 				"./temp/");
 	}

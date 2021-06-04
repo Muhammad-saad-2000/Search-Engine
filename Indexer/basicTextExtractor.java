@@ -3,12 +3,11 @@ import net.htmlparser.jericho.Source;
 import opennlp.tools.stemmer.PorterStemmer;
 import opennlp.tools.stemmer.Stemmer;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.io.*;
+import java.nio.file.*;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.sql.*;
 import java.util.*;
 import java.util.function.Function;
 
@@ -58,6 +57,9 @@ public class basicTextExtractor {
         }
 
         persistIntoDB(htmlFilePath, title, text, stemWordsFrequency);
+
+        //TODO KAMOOLA: move the file from ../retrievedPages folder to ../indexedPages folder
+        //Path tmp = Files.move(Paths.get("../retrievedPages/"+htmlFilePath),Paths.get("../indexedPages/"+htmlFilePath),REPLACE_EXISTING);
     }
 
     private void persistIntoDB(String URL, String Title, String rawContent, Map<String,Integer> wordFrequencyTable){
