@@ -2,7 +2,7 @@ import java.util.regex.*;
 //testing crawler as a whole, Seeds + Rank, multiThreaded
 // I didn't run this :)
 
-//Seeds
+//CRAWLER Seeds only
 class MainTests0 {
 	static final int one_hour = 1000 * 3600;
 
@@ -37,7 +37,7 @@ class MainTests0 {
 
 }
 
-// Rank
+//CRAWLER Rank only
 class MainTest00 {
 	static final int one_hour = 1000 * 3600;
 
@@ -67,6 +67,16 @@ class MainTest00 {
 		seedsConnection.disconnect();
 	}
 
+}
+
+//test initial priority
+class Maintst{
+	public static void main(String[] args) {
+		System.out.println(Scheduler.getInitialPriority("https://stackoverflow.com"));
+		System.out.println(Scheduler.getInitialPriority("https://en.wikipedia.org/wiki/Sinc_function"));
+		System.out.println(Scheduler.getInitialPriority("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution"));
+		System.out.println(Scheduler.getInitialPriority("https://stackoverflow.com"));
+	}
 }
 
 // test fetch to file

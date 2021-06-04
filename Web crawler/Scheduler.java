@@ -3,7 +3,7 @@ import java.net.*;
 
 public class Scheduler {
 
-    public static final int DEFAULT_PRIORITY = 15, MAX_PRIORITY = Integer.MAX_VALUE, MIN_PRIORITY = Integer.MIN_VALUE,
+    public static final int DEFAULT_PRIORITY = 10, MAX_PRIORITY = Integer.MAX_VALUE, MIN_PRIORITY = Integer.MIN_VALUE,
             DUPLICATE_INCREMENT = 4;
 
     // increment of priority based on domain
@@ -20,17 +20,13 @@ public class Scheduler {
     public static int getInitialPriority(String url) {
         int ret = DEFAULT_PRIORITY;
         try {
-            // tmp
-            if (true)
-                return 10;
-
             URI uri = new URI(url);
             String domain = uri.getHost();
+            domain = domain.substring(domain.lastIndexOf('.') + 1, domain.length());
             System.out.println("domain\n" + domain);
-            System.out.println(domain.startsWith("www."));
-            domain = domain.startsWith("www.") ? domain.substring(4) : domain;
 
-            ret += INC_DOMAIN.get(domain);
+            if (INC_DOMAIN.get(domain.toUpperCase()) != null)
+                ret += INC_DOMAIN.get(domain.toUpperCase());
 
             return ret;
         } catch (Exception ex) {

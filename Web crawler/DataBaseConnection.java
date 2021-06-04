@@ -45,16 +45,17 @@ public class DataBaseConnection {
             System.out.println(ex);
             System.out.println("");
         }
+
         return url;
     }
 
     public void pushUrlToSeeds(String url) {
-        int priority = 10;
+        int priority = Scheduler.getInitialPriority(url);
         try {
             mysqlStatement = mysqlConnection.createStatement();
             mysqlStatement.executeUpdate("insert into Seeds values ('" + url + "'," + priority + ")");
         } catch (Exception ex) {
-            System.out.println("EXC in insertin g to seeeds");
+            System.out.println("EXC in inserting to seeds");
             System.out.println(ex);
         }
     }
@@ -145,3 +146,4 @@ public class DataBaseConnection {
     }
 
 }
+//TODO: close statements ? 
