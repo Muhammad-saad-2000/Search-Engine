@@ -17,9 +17,12 @@ public class Crawler {
         private void doWork() {
             // while not interrupted, do work
             while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("craweler says hi");
                 String curr_url = conn.popUrlFromSeeds();
-                if (curr_url == null)
+                if (curr_url == null) {
+                    System.out.println("NO MORE SEEDSF");
                     break;
+                }
                 // chk if already in some rank
                 if (Fetcher.isCrawled(curr_url)) {
                     continue;
@@ -28,20 +31,22 @@ public class Crawler {
                 Fetcher.fetchToFile(curr_url, "../retrievedPages/");
                 String curr_content = Fetcher.fetchToString(curr_url);
                 String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content, curr_url);// Saad:i add the url
-                // so i could get the
-                // robots
+                                                                                                   // so i could get the
+                                                                                                   // robots
                 // push found urls into Seed if NOT CRAWLED
                 for (String inner_url : inner_urls) {
                     // chk if already in some rank
                     if (Fetcher.isCrawled(inner_url)) {
                         continue;
                     }
+                    System.out.println("checking if already ins eeds");
                     // chk if already in Seeds
                     if (conn.isInSeeds(inner_url)) {
                         conn.increasePriorityInSeeds(inner_url, Scheduler.DUPLICATE_INCREMENT);
                         continue;
                     }
                     // else, push it to Seeds
+                    System.out.println("PUSHing to seeds");
                     conn.pushUrlToSeeds(inner_url);
                 }
 
@@ -87,7 +92,9 @@ public class Crawler {
 
                 // now  crawl it
                 String curr_content = Fetcher.fetchToString(curr_url);
-                String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content, curr_url);//Saad:i add the url so i could get the robots
+                String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content, curr_url);// Saad:i add the url
+                                                                                                   // so i could get the
+                                                                                                   // robots
                 // push found urls into Seed if NOT CRAWLED
                 for (String inner_url : inner_urls) {
                     if (Fetcher.isCrawled(inner_url))

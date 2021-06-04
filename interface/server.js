@@ -35,11 +35,27 @@ app.post('/word', (request, response) => {
 			let word = recivedData.word;
 			fs.readFile('./results/baseScrip.js', function(err, data) {
 				if (err) throw err;
-				//TODO:retrive and add the urls
-				//==============================
+				//================================================
 				console.log(word);//use that word for qurey
-				data += addUrlResult("Facebook", "https://facebook.com");
-				data += addUrlResult("CNN", "https://edition.cnn.com");
+				fileArr=[]//TODO:add from data base
+				let urlArr=[];
+				let title=[];
+				for(let i=0;i<fileArr.length;i++){
+					let tempStr= fs.readFileSync(`../Web crawler/retrievedPages/${fileArr[i]}`);
+					let fileContent=tempStr.toString();
+					urlArr[i]="";
+					let j=0;
+					while(fileContent[j]!='\n'){
+						urlArr[i]+=fileContent[j];
+						j++;
+					}
+					let expr=/https?:\/\/(www\.)?([-a-zA-Z0-9@:%._\+~#=]{1,256})\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+					title[i]=expr.exec(urlArr[i]);
+					title[i]=title[i][2];
+				}
+				for(let i=0;i<fileArr.length;i++){
+					data+=addUrlResult(title[i],urlArr[i]);
+				}
 				//===============================
 				fs.writeFile('./results/script.js', data, function (err) {
 					if (err) throw err;

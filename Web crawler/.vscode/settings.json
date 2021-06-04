@@ -1,20 +1,5 @@
 {
 	"java.project.sourcePaths": [
 		""
-	],
-	"sqltools.connections": [
-		{
-			"mysqlOptions": {
-				"authProtocol": "default"
-			},
-			"previewLimit": 50,
-			"server": "localhost",
-			"port": 3306,
-			"driver": "MySQL",
-			"name": "engine",
-			"database": "searchengine",
-			"username": "root",
-			"password": "ssmk65108"
-		}
 	]
 }

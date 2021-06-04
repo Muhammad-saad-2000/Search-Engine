@@ -4,11 +4,7 @@ import java.sql.ResultSet;
 import java.util.*;
 
 public class Fetcher {
-    //ELSE if it is
-    String last = readFileToString("../retrievedPages/" + url + ".html");
-
-    fetchToFile(url, "../retrievedPages");
-
+    
     /**
      * This function is used to fetch the content of the web page and put it into a
      * html file
