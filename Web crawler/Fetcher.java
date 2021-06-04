@@ -86,7 +86,6 @@ public class Fetcher {
         return result;
     }
 
-    last =last.substring(40,50);
 
     /**
      * This function is used to check if given web page is changed or not and update
