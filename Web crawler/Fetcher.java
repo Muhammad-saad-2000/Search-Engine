@@ -106,7 +106,7 @@ public class Fetcher {
         String current = fetchToString(url);
         current = current.substring(40, 50);
         //get previous version
-        String last = readFileToString("../indexedPages/" + url + ".html");
+        String last = readFileToString("./indexedPages/" + url + ".html");
         last = last.substring(40, 50);
         return (current.hashCode() != last.hashCode());
     }
@@ -125,7 +125,7 @@ public class Fetcher {
         url += ".html";
         // declaring a file
         System.out.println(System.getProperty("user.dir"));
-        File testfile = new File("../retrievedPages/", url);
+        File testfile = new File("./retrievedPages/", url);
 
         return testfile.exists();
     }
@@ -136,7 +136,7 @@ public class Fetcher {
         url += ".html";
         // declaring a file
         System.out.println(System.getProperty("user.dir"));
-        File testfile = new File("../indexedPages/", url);
+        File testfile = new File("./indexedPages/", url);
 
         return testfile.exists();
     }

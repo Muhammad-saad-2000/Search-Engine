@@ -12,15 +12,15 @@ class MainTests0 {
 		seedsConnection.connect();
 
 		Thread t0 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
-		// Thread t1 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
-		// Thread t2 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
+		 Thread t1 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
+		 Thread t2 = new Thread(new Crawler.Crawler_Seeds(seedsConnection));
 
-		t0.start();
-		// t1.start();
-		// t2.start();
+		 t0.start();
+		 t1.start();
+		 t2.start();
 
 		// wait for some time
-		Thread.currentThread().sleep(2 * 1000000000);
+		Thread.currentThread().sleep(2 * 1000*60);
 
 		// interrupt all
 
@@ -28,8 +28,8 @@ class MainTests0 {
 		// Thread.currentThread().getThreadGroup().interrupt();
 
 		t0.interrupt();
-		// t1.interrupt();
-		// t2.interrupt();
+		t1.interrupt();
+		t2.interrupt();
 
 		// disable connection and end
 		seedsConnection.disconnect();
@@ -83,7 +83,7 @@ class Maintst{
 class MainTests1 {
 	public static void main(String[] args) {
 		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
-				"../retrievedPages/");
+				"./retrievedPages/");
 		Fetcher.fetchToFile("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution",
 				"./temp/");
 	}

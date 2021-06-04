@@ -1,5 +1,11 @@
 {
 	"java.project.sourcePaths": [
-		"Web crawler"
-	]
+		"Web crawler",
+		"Indexer"
+	],
+	"java.project.referencedLibraries": [
+		"lib/**/*.jar",
+		"c:\\Program Files (x86)\\MySQL\\Connector J 8.0\\mysql-connector-java-8.0.24.jar"
+	],
+	
 }
