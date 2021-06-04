@@ -39,14 +39,12 @@ public class Crawler {
                     if (Fetcher.isCrawled(inner_url)) {
                         continue;
                     }
-                    System.out.println("checking if already ins eeds");
                     // chk if already in Seeds
                     if (conn.isInSeeds(inner_url)) {
                         conn.increasePriorityInSeeds(inner_url, Scheduler.DUPLICATE_INCREMENT);
                         continue;
                     }
                     // else, push it to Seeds
-                    System.out.println("PUSHing to seeds");
                     conn.pushUrlToSeeds(inner_url);
                 }
 

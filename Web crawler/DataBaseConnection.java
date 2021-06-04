@@ -34,10 +34,14 @@ public class DataBaseConnection {
         try {
             mysqlStatement = mysqlConnection.createStatement();
             ResultSet result = mysqlStatement.executeQuery("SELECT MAX(PriorityValue) FROM Seeds");
-            result.next();
+            if (result != null && !result.next()) {
+                return null;
+            }
             priority = result.getInt(1);
             result = mysqlStatement.executeQuery("SELECT * FROM Seeds where PriorityValue=" + priority);
-            result.next();
+            if (result != null && !result.next()) {
+                return null;
+            }
             url = result.getString(1);
             mysqlStatement.executeUpdate("DELETE FROM Seeds WHERE UrlName = '" + url + "'");
         } catch (Exception ex) {
@@ -66,9 +70,11 @@ public class DataBaseConnection {
         try {
             mysqlStatement = mysqlConnection.createStatement();
             ResultSet result = mysqlStatement.executeQuery("SELECT * FROM Seeds WHERE UrlName = '" + url + "'");
-            if (result.next())
+
+            if (result != null && result.next())
                 ret = true;
         } catch (Exception ex) {
+            System.out.println("Crawler 73");
             System.out.println(ex);
         }
         return ret;
@@ -81,8 +87,11 @@ public class DataBaseConnection {
             //// these lines are there just to avoid overflow of priority
             ResultSet res = mysqlStatement
                     .executeQuery("SELECT PriorityValue FROM Seeds WHERE UrlName = '" + url + "'");
-            res.next();
-            int old_pr = res.getInt(0);
+
+            if (!res.next()) {
+                return;
+            }
+            int old_pr = res.getInt(1);
             int new_Pr = old_pr;
             if (Scheduler.MAX_PRIORITY - inc_priority >= new_Pr)
                 new_Pr += inc_priority;
@@ -113,7 +122,7 @@ public class DataBaseConnection {
             ResultSet result = mysqlStatement.executeQuery("SELECT * FROM tmp_Rank" + rank + " LIMIT 1");
             // if found return it, else return NULL
             if (result.next()) {
-                url = result.getString(0);
+                url = result.getString(1);
                 mysqlStatement.executeUpdate("DELETE FROM Rank" + rank + " WHERE UrlName = '" + url + "'");
                 return url;
             }
@@ -146,4 +155,4 @@ public class DataBaseConnection {
     }
 
 }
-//TODO: close statements ? 
+// TODO: close statements ?

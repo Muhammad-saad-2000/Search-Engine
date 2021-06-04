@@ -23,7 +23,7 @@ public class Scheduler {
             URI uri = new URI(url);
             String domain = uri.getHost();
             domain = domain.substring(domain.lastIndexOf('.') + 1, domain.length());
-            System.out.println("domain\n" + domain);
+            //System.out.println("domain\n" + domain);
 
             if (INC_DOMAIN.get(domain.toUpperCase()) != null)
                 ret += INC_DOMAIN.get(domain.toUpperCase());
