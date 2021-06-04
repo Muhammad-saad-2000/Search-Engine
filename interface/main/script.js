@@ -9,7 +9,7 @@ document.querySelector("#buscar").onclick = async () => {//click search
       }
       else {
             dataToSend = { word: document.querySelector("#search").value };
-            let response = await fetch("http://localhost:8080/word", {
+            let response = await fetch("http://localhost:8000/word", {
                   method: "POST",
                   body: JSON.stringify(dataToSend),
                   headers: {
@@ -18,7 +18,7 @@ document.querySelector("#buscar").onclick = async () => {//click search
             });
             let resivedData = await response.json();
             if (resivedData.status == 1) {
-                  window.location.replace("http://localhost:8080/results/index.html");
+                  window.location.replace("http://localhost:8000/results/index.html");
             }
       }
 }

@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.util.*;
 
 public class Fetcher {
-    
+
     /**
      * This function is used to fetch the content of the web page and put it into a
      * html file
@@ -13,7 +13,7 @@ public class Fetcher {
      * @param path the path to put file in
      */
     static void fetchToFile(String url, String path) {
-        String content = url + "\n";
+        String content = '"' + url + '"' + "\n";
         try {
             URLConnection connection = new URL(url).openConnection();
             Scanner scanner = new Scanner(connection.getInputStream());
@@ -86,7 +86,6 @@ public class Fetcher {
         return result;
     }
 
-
     /**
      * This function is used to check if given web page is changed or not and update
      * the old content
@@ -96,16 +95,17 @@ public class Fetcher {
 
     static public boolean isChanged(String url) {
 
-        //TODO: maybe better solution to below line ? :D
-        //IF being indexed --> say it is changed to avoid concurrency issues with accessing files
+        // TODO: maybe better solution to below line ? :D
+        // IF being indexed --> say it is changed to avoid concurrency issues with
+        // accessing files
         if (!isIndexed(url))
             return true;
 
-        //ELSE  WE CHECK INDEXED FOLDER:
-        //get current version
+        // ELSE WE CHECK INDEXED FOLDER:
+        // get current version
         String current = fetchToString(url);
         current = current.substring(40, 50);
-        //get previous version
+        // get previous version
         String last = readFileToString("./indexedPages/" + url + ".html");
         last = last.substring(40, 50);
         return (current.hashCode() != last.hashCode());

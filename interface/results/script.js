@@ -18,5 +18,5 @@ function addResult(title, url) {
 	}
 	id++;
 }
-addResult("Facebook", "https://facebook.com");
-addResult("CNN", "https://edition.cnn.com");
+addResult("stackoverflow", "https://stackoverflow.blog");
+addResult("gamedev.stackexchange", "https://gamedev.stackexchange.com");
