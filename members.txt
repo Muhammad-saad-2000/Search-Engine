@@ -1,10 +1,10 @@
 ﻿english below
-1- غياث عمر صالح			فصل: 2		رقم: 7
+1- غياث عمر صالح		فصل: 2		رقم: 7
 2- محمد سعد فتحي			فصل: 2		رقم: 14
-3- مصطفى محمد أحمد الجندي	فصل: 2		رقم: 25
+3- مصطفى محمد أحمد الجندي 	فصل: 2		رقم: 25
 4- مصطفى محمود كمال الدين	فصل: 2		رقم: 26
 ________________________________________________________
-1- Ghieath Omar						SEC.: 2		B.N.: 7
-2- Mohamed Saad Fathy				SEC.: 2		B.N.:	14
+1- Ghieath Omar			SEC.: 2		B.N.: 7
+2- Mohamed Saad Fathy			SEC.: 2		B.N.:	14
 3- Mostafa Mohamed Ahmed AlGendy	SEC.: 2		B.N.: 25
-4- Mostafa Mahmoud Kamal Eldin		SEC.: 2		B.N.: 26
+4- Mostafa Mahmoud Kamal Eldin	SEC.: 2		B.N.: 26
