@@ -32,7 +32,7 @@ class Test {
             Statement mysqlStatement = conn.createStatement();
             ResultSet result = mysqlStatement.executeQuery("SELECT * FROM words LIMIT 100");
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
     }

@@ -18,7 +18,7 @@ public class DataBaseConnection {
             // mysqlStatement = mysqlConnection.createStatement();
         } catch (Exception ex) {
             System.out.println("AAAAAAAAAAAAA");
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -26,6 +26,7 @@ public class DataBaseConnection {
         try {
             mysqlConnection.close();
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -46,7 +47,7 @@ public class DataBaseConnection {
             mysqlStatement.executeUpdate("DELETE FROM Seeds WHERE UrlName = '" + url + "'");
         } catch (Exception ex) {
             System.out.println("exc in popping from seeds");
-            System.out.println(ex);
+            ex.printStackTrace();
             System.out.println("");
         }
 
@@ -60,7 +61,7 @@ public class DataBaseConnection {
             mysqlStatement.executeUpdate("insert into Seeds values ('" + url + "'," + priority + ")");
         } catch (Exception ex) {
             System.out.println("EXC in inserting to seeds");
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -74,8 +75,7 @@ public class DataBaseConnection {
             if (result != null && result.next())
                 ret = true;
         } catch (Exception ex) {
-            System.out.println("Crawler 73");
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return ret;
     }
@@ -100,7 +100,7 @@ public class DataBaseConnection {
             mysqlStatement
                     .executeUpdate("UPDATE Seeds SET PriorityValue =  " + new_Pr + " WHERE UrlName = '" + url + "'");
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -112,7 +112,7 @@ public class DataBaseConnection {
             // Copy table
             mysqlStatement.executeUpdate("INSERT INTO tmp_Rank" + rank + " SELECT * FROM Rank" + rank);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -128,7 +128,7 @@ public class DataBaseConnection {
             }
 
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return null;
     }
@@ -137,7 +137,7 @@ public class DataBaseConnection {
         try {
             mysqlStatement.executeUpdate("insert into Rank" + rank + " values ('" + url + "')");
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -150,7 +150,7 @@ public class DataBaseConnection {
             mysqlStatement.executeUpdate("DELETE FROM Rank" + rank + " WHERE UrlName = '" + url + "'");
             pushUrlToRank(rank + 1, url);
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 

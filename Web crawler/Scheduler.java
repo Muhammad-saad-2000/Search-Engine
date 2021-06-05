@@ -30,7 +30,7 @@ public class Scheduler {
 
             return ret;
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
             return MIN_PRIORITY + 1000;
         }
 

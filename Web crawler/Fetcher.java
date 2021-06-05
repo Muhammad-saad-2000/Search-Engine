@@ -21,7 +21,7 @@ public class Fetcher {
             content += scanner.next();
             scanner.close();
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         try {
             url = url.replaceAll("[^a-zA-Z0-9]", "");
@@ -29,7 +29,7 @@ public class Fetcher {
             out.write(content);
             out.close();
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -50,7 +50,7 @@ public class Fetcher {
             content = scanner.next();
             scanner.close();
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return content;
     }
@@ -81,7 +81,7 @@ public class Fetcher {
             }
             scanner.close();
         } catch (Exception ex) {
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return result;
     }

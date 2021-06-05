@@ -60,7 +60,7 @@ public class basicTextExtractor {
         try {
             Files.move(Paths.get(htmlFilePath), Paths.get("./indexedPages/" + htmlFilePath.substring(16)));
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
