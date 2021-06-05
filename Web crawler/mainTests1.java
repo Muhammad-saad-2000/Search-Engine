@@ -5,7 +5,7 @@ import java.util.regex.*;
 
 //CRAWLING ( SEEDS )
 class maintest {
-    static  final int SECOND = 1000;
+    static final int SECOND = 1000;
     static final int MINUTE = 60 * SECOND;
     static final int HOUR = 60 * MINUTE;
     static final int DAY = 24 * HOUR;
@@ -18,11 +18,16 @@ class maintest {
         DataBaseConnection conn = new DataBaseConnection();
         conn.connect();
 
-        //read number of threads wanted
+        // read number of threads wanted
         Scanner sc = new Scanner(System.in);
-        System.out.println("how many Crawlers (on Seeds) you want?");
+        System.out.println("how many Crawler Threads (on Seeds) you want?");
         int NUM_THREADS = sc.nextInt();
         Thread[] Thread_array = new Thread[NUM_THREADS];
+
+        System.out.println("how long you want to crawl\n Enter time in minutes as integer ");
+        int tm = sc.nextInt();
+        tm *=60*1000;
+
         for (int i = 0; i < NUM_THREADS; i++) {
             Thread_array[i] = new Thread(new Crawler.Crawler_Seeds(conn));
             Thread_array[i].start();
@@ -32,21 +37,25 @@ class maintest {
         System.out.println(Thread.activeCount());
 
         // wait for some time
-//        try{ Thread.sleep(15 * MINUTE);} catch(Exception e){e.printStackTrace();};
+         try{ Thread.sleep(tm);} catch(Exception e){e.printStackTrace();};
 
         // interrupt all
         Thread.currentThread().getThreadGroup().interrupt();
 
-        // join all
-        for (int i = 0; i < NUM_THREADS; i++) {
-            try {
-                Thread_array[i].join();
-            } catch (InterruptedException e) {
-                System.out.println("Exc in joining\n");
-                e.printStackTrace();
-            }
+        try {
+            Thread.sleep(15 * SECOND);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
+        // join all
+        // for (int i = 0; i < NUM_THREADS; i++) {
+        //     try {
+        //         Thread_array[i].join();
+        //     } catch (InterruptedException e) {
+        //         System.out.println("Exc in joining\n");
+        //         e.printStackTrace();
+        //     }
+        // }
 
         // disable connection and end
         conn.disconnect();
@@ -55,7 +64,7 @@ class maintest {
 
 // RE-CRAWLING (RANK)
 class maintest2 {
-    static  final int SECOND = 1000;
+    static final int SECOND = 1000;
     static final int MINUTE = 60 * SECOND;
     static final int HOUR = 60 * MINUTE;
     static final int DAY = 24 * HOUR;
@@ -68,26 +77,35 @@ class maintest2 {
         DataBaseConnection conn = new DataBaseConnection();
         conn.connect();
 
-        //read number of threads wanted
+        // read number of threads wanted
         Scanner sc = new Scanner(System.in);
-        System.out.println("WHAT RANK TO RE-CRAWL (1->6?) ?");
+        System.out.println("WHAT RANK TO RE-CRAWL (1->4?) ?");
         int R = sc.nextInt();
-        System.out.println("how many Re-Crawlers (on Rank"+R+") you want?");
+        System.out.println("how many Re-Crawlers threads (on Rank" + R + ") you want?");
+        // preparing tmp_Rank
+        conn.fillTmpRank(R);
+
+        System.out.println("Recrlawler will finish after recrawling ALL pages in Rank"+R);
+
         int NUM_THREADS = sc.nextInt();
         Thread[] Thread_array = new Thread[NUM_THREADS];
         for (int i = 0; i < NUM_THREADS; i++) {
-            Thread_array[i] = new Thread(new Crawler.Crawler_Rank(conn,R));
+            Thread_array[i] = new Thread(new Crawler.Crawler_Rank(conn, R));
             Thread_array[i].start();
         }
 
         System.out.println("Printing num of active threads: (this number is off by TWO <one for main>)");
         System.out.println(Thread.activeCount());
-
+        
         // wait for some time
-        try{
-            Thread.sleep(15 * MINUTE);} catch(Exception e){e.printStackTrace();};
-
-        System.out.println("WAITING FOR RE-CRAWLERS TO FINISH");
+        // try {
+        //     Thread.sleep(30 * SECOND);
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
+        
+        
+        System.out.println("WAITING FOR RE-CRAWLERS TO FINISH, Rank:"+R);
         // join all
         for (int i = 0; i < NUM_THREADS; i++) {
             try {
@@ -97,13 +115,14 @@ class maintest2 {
                 e.printStackTrace();
             }
         }
-
+        
+        conn.dropTmpRank(R);
         // disable connection and end
         conn.disconnect();
     }
 }
 
-//CRAWLER Seeds
+// CRAWLER Seeds
 class MainTests0 {
     static final int one_hour = 1000 * 3600;
 
@@ -121,7 +140,7 @@ class MainTests0 {
         t2.start();
 
         // wait for some time
-        //Thread.currentThread().sleep(2 * 1000*60);
+        Thread.currentThread().sleep(1000 * 30);
         System.out.println(Thread.activeCount());
 
         // interrupt all
@@ -133,7 +152,7 @@ class MainTests0 {
 
 }
 
-//CRAWLER Rank
+// CRAWLER Rank
 class MainTest00 {
     static final int one_hour = 1000 * 3600;
 
@@ -142,12 +161,14 @@ class MainTest00 {
         DataBaseConnection seedsConnection = new DataBaseConnection();
         seedsConnection.connect();
 
-        Thread t0 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
-        Thread t1 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
-        Thread t2 = new Thread(new Crawler.Crawler_Rank(seedsConnection, 1));
+        int R = 1;
+
+        Thread t0 = new Thread(new Crawler.Crawler_Rank(seedsConnection, R));
+        Thread t1 = new Thread(new Crawler.Crawler_Rank(seedsConnection, R));
+        Thread t2 = new Thread(new Crawler.Crawler_Rank(seedsConnection, R));
 
         // preparing tmp_Rank1
-        seedsConnection.fillTmpRank(1);
+        seedsConnection.fillTmpRank(R);
 
         // START
         t0.start();
@@ -159,18 +180,20 @@ class MainTest00 {
         t1.join();
         t2.join();
 
+        seedsConnection.dropTmpRank(R);
         // disable connection and end
         seedsConnection.disconnect();
     }
 
 }
 
-//test initial priority
+// test initial priority
 class Maintst {
     public static void main(String[] args) {
         System.out.println(Scheduler.getInitialPriority("https://stackoverflow.com"));
         System.out.println(Scheduler.getInitialPriority("https://en.wikipedia.org/wiki/Sinc_function"));
-        System.out.println(Scheduler.getInitialPriority("https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution"));
+        System.out.println(Scheduler.getInitialPriority(
+                "https://en.wikipedia.org/wiki/Sinc_function#Relationship_to_the_Dirac_delta_distribution"));
         System.out.println(Scheduler.getInitialPriority("https://stackoverflow.com"));
     }
 }
@@ -276,4 +299,12 @@ class MainTests7 {
         }
     }
 
+}
+
+class MainTests9 {
+    public static void main(String[] args) {
+        DataBaseConnection connection = new DataBaseConnection();
+        connection.connect();
+        connection.pushUrlToRank(1, "Weeeeeeeee");
+    }
 }

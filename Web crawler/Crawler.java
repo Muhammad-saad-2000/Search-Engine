@@ -20,7 +20,7 @@ public class Crawler {
                 System.out.println("craweler says hi");
                 String curr_url = conn.popUrlFromSeeds();
                 if (curr_url == null) {
-                    System.out.println("NO MORE SEEDSF");
+                    System.out.println("NO MORE SEEDS!!");
                     break;
                 }
                 // chk if already in some rank
@@ -47,7 +47,7 @@ public class Crawler {
                     // else, push it to Seeds
                     conn.pushUrlToSeeds(inner_url);
                 }
-
+                conn.pushUrlToRank(1, curr_url);
             }
 
         }
@@ -80,15 +80,16 @@ public class Crawler {
                     conn.pushUrlToNextRank(rank, curr_url);
                     continue;
                 }
-                //CHANGED -> re-index:
-                //1-remove old page from indexed
+                // CHANGED -> re-index:
+                // 1-remove old page from indexed
                 File ob = new File("./indexedPages/" + curr_url + ".html");
-                ob.delete();
+                if (!ob.delete())
+                    System.out.println("FILE NOT DELETED!");
 
-                //2-in queue to be re-indexed
+                // 2-in queue to be re-indexed
                 Fetcher.fetchToFile(curr_url, "./retrievedPages/");
 
-                // now  crawl it
+                // now crawl it
                 String curr_content = Fetcher.fetchToString(curr_url);
                 String[] inner_urls = PatternMatcher.ExtractUrlsFromString(curr_content, curr_url);// Saad:i add the url
                                                                                                    // so i could get the

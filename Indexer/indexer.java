@@ -6,9 +6,12 @@ import java.util.concurrent.Executors;
 
 public class indexer {
     private static final String HTML_FOLDER_PATH = "./retrievedPages/";
-    private static final int MAX_THREAD_POOL_SIZE = 4;
-
+    private static int MAX_THREAD_POOL_SIZE = 4;
+    
     public static void main(String[] args) {
+        System.out.println("How many threads for Indexer? ");
+        Scanner sc = new Scanner(System.in);
+        MAX_THREAD_POOL_SIZE = sc.nextInt();
 
         File folder = new File(HTML_FOLDER_PATH);
         File[] htmlFiles = folder.listFiles();

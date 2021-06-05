@@ -30,7 +30,7 @@ public class DataBaseConnection {
         }
     }
 
-    public String popUrlFromSeeds() {
+    public synchronized String popUrlFromSeeds() {
         url = null;
         try {
             mysqlStatement = mysqlConnection.createStatement();
@@ -75,7 +75,7 @@ public class DataBaseConnection {
             if (result != null && result.next())
                 ret = true;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
         return ret;
     }
@@ -85,10 +85,11 @@ public class DataBaseConnection {
     public void increasePriorityInSeeds(String url, int inc_priority) {
         try {
             //// these lines are there just to avoid overflow of priority
+            mysqlStatement = mysqlConnection.createStatement();
             ResultSet res = mysqlStatement
                     .executeQuery("SELECT PriorityValue FROM Seeds WHERE UrlName = '" + url + "'");
 
-            if (!res.next()) {
+            if (res == null || !res.next()) {
                 return;
             }
             int old_pr = res.getInt(1);
@@ -100,13 +101,14 @@ public class DataBaseConnection {
             mysqlStatement
                     .executeUpdate("UPDATE Seeds SET PriorityValue =  " + new_Pr + " WHERE UrlName = '" + url + "'");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 
     // Gh: this fills tmp_Rank for crawling purposes
     public void fillTmpRank(int rank) {
         try {
+            mysqlStatement = mysqlConnection.createStatement();
             // create if not exists
             mysqlStatement.executeUpdate("CREATE TABLE IF NOT EXISTS tmp_Rank" + rank + " (UrlName varchar(2048))");
             // Copy table
@@ -116,14 +118,28 @@ public class DataBaseConnection {
         }
     }
 
-    // Gh: Changed to return ALL urls as an array of Strings
-    public String popUrlFromRank(int rank) {
+    public void dropTmpRank(int rank) {
         try {
+            mysqlStatement = mysqlConnection.createStatement();
+            // create if not exists
+            mysqlStatement.executeUpdate("DROP TABLE IF EXISTS tmp_Rank" + rank);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // Gh: Changed to return ALL urls as an array of Strings
+    public synchronized String popUrlFromRank(int rank) {
+        try {
+            mysqlStatement = mysqlConnection.createStatement();
             ResultSet result = mysqlStatement.executeQuery("SELECT * FROM tmp_Rank" + rank + " LIMIT 1");
             // if found return it, else return NULL
-            if (result.next()) {
+            if (result != null && result.next()) {
                 url = result.getString(1);
-                mysqlStatement.executeUpdate("DELETE FROM Rank" + rank + " WHERE UrlName = '" + url + "'");
+                // mysqlStatement.executeUpdate("DELETE FROM Rank" + rank + " WHERE UrlName = '"
+                // + url + "'");
+                mysqlStatement.executeUpdate("DELETE FROM tmp_Rank" + rank + " WHERE UrlName = '" + url + "'");
                 return url;
             }
 
@@ -135,7 +151,8 @@ public class DataBaseConnection {
 
     public void pushUrlToRank(int rank, String url) {
         try {
-            mysqlStatement.executeUpdate("insert into Rank" + rank + " values ('" + url + "')");
+            mysqlStatement = mysqlConnection.createStatement();
+            mysqlStatement.executeUpdate("insert into rank" + rank + " values ('" + url + "')");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -147,6 +164,7 @@ public class DataBaseConnection {
         if (rank == MAX_RANK)
             return;
         try {
+            mysqlStatement = mysqlConnection.createStatement();
             mysqlStatement.executeUpdate("DELETE FROM Rank" + rank + " WHERE UrlName = '" + url + "'");
             pushUrlToRank(rank + 1, url);
         } catch (Exception ex) {
@@ -155,4 +173,3 @@ public class DataBaseConnection {
     }
 
 }
-// TODO: close statements ?

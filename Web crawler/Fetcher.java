@@ -41,13 +41,13 @@ public class Fetcher {
      * @return the content of the page as a string
      */
     static String fetchToString(String url) {
-        String content = null;
+        String content = '"' + url + '"' + "\n";
         URLConnection connection = null;
         try {
             connection = new URL(url).openConnection();
             Scanner scanner = new Scanner(connection.getInputStream());
             scanner.useDelimiter("\\Z");
-            content = scanner.next();
+            content += scanner.next();
             scanner.close();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -78,6 +78,7 @@ public class Fetcher {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 result += scanner.nextLine();
+                result += '\n';
             }
             scanner.close();
         } catch (Exception ex) {
@@ -94,28 +95,24 @@ public class Fetcher {
      */
 
     static public boolean isChanged(String url) {
-
         // TODO: maybe better solution to below line ? :D
         // IF being indexed --> say it is changed to avoid concurrency issues with
         // accessing files
-        if (!isIndexed(url))
+        if (!isIndexed(url)) {
             return true;
-
+        }
         // ELSE WE CHECK INDEXED FOLDER:
         // get current version
         String current = fetchToString(url);
         current = current.substring(40, 50);
         // get previous version
+        url = url.replaceAll("[^a-zA-Z0-9]", "");
         String last = readFileToString("./indexedPages/" + url + ".html");
         last = last.substring(40, 50);
         return (current.hashCode() != last.hashCode());
     }
 
-    // TODO this is not req in doc, so mehhhhhhh
-    /*
-     * static public boolean isDuplicate(String content) { return false; }
-     */
-
+  
     // This func returns true <--> page is in some rank now!
     static public boolean isCrawled(String url) {
         if (isIndexed(url))
