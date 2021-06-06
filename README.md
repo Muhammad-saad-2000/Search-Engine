@@ -15,3 +15,7 @@
 * Indexer:
   * `java -jar Indexer.jar`
   * follow instructions
+
+* Web interface (query search):
+  *execute this command from cmd opened in the interface folder `node ./server.js`
+  *the site will be on localhost port 8000

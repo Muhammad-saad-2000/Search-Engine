@@ -24,7 +24,7 @@ public class PatternMatcher {
                 if (!robotMatcher.group(1).matches("^/|\\/wiki\\/")) {
                     robotsPattern += "\\b" + robotMatcher.group(1).replaceAll("[^a-zA-Z0-9/]", "") + "\\b";
                 } else {
-                    robotsPattern += "fuck";
+                    robotsPattern += "israel";
                 }
             }
             while (robotMatcher.find()) {
