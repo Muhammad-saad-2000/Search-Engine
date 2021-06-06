@@ -121,7 +121,6 @@ public class DataBaseConnection {
     public void dropTmpRank(int rank) {
         try {
             mysqlStatement = mysqlConnection.createStatement();
-            // create if not exists
             mysqlStatement.executeUpdate("DROP TABLE IF EXISTS tmp_Rank" + rank);
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,7 +128,6 @@ public class DataBaseConnection {
 
     }
 
-    // Gh: Changed to return ALL urls as an array of Strings
     public synchronized String popUrlFromRank(int rank) {
         try {
             mysqlStatement = mysqlConnection.createStatement();
